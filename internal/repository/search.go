@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+
 	"github.com/GoSimplicity/LinkMe/internal/domain"
 	"github.com/GoSimplicity/LinkMe/internal/repository/dao"
 )
@@ -12,23 +13,36 @@ type searchRepository struct {
 }
 
 type SearchRepository interface {
+	SearchComments(ctx context.Context, keywords []string) ([]domain.CommentSearch, error)
 	SearchPosts(ctx context.Context, keywords []string) ([]domain.PostSearch, error) // 搜索文章
 	SearchUsers(ctx context.Context, keywords []string) ([]domain.UserSearch, error) // 搜索用户
 	IsExistPost(ctx context.Context, postId uint) (bool, error)
+	IsExistComment(ctx context.Context, commentId uint) (bool, error)
 	IsExistUser(ctx context.Context, userId int64) (bool, error)
 	InputUser(ctx context.Context, user domain.UserSearch) error // 处理输入用户
 	InputPost(ctx context.Context, post domain.PostSearch) error
+<<<<<<< HEAD
+=======
+	InputComment(ctx context.Context, comment domain.CommentSearch) error
+>>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 	BulkInputPosts(ctx context.Context, posts []domain.PostSearch) error
 	BulkInputUsers(ctx context.Context, users []domain.UserSearch) error
 	BulkInputLogs(ctx context.Context, event []domain.ReadEvent) error // 处理输入文章
 	DeleteUserIndex(ctx context.Context, userId int64) error           // 删除用户索引
 	DeletePostIndex(ctx context.Context, postId uint) error            // 删除文章索引
+	DeleteCommentIndex(ctx context.Context, commentId uint) error      // 删除评论索引
+
 }
 
 func NewSearchRepository(dao dao.SearchDAO) SearchRepository {
 	return &searchRepository{
 		dao: dao,
 	}
+}
+
+func (s *searchRepository) SearchComments(ctx context.Context, keywords []string) ([]domain.CommentSearch, error) {
+	comments, err := s.dao.SearchComments(ctx, keywords)
+	return s.toDomainCommentSearch(comments), err
 }
 
 func (s *searchRepository) SearchPosts(ctx context.Context, keywords []string) ([]domain.PostSearch, error) {
@@ -45,6 +59,9 @@ func (s *searchRepository) IsExistPost(ctx context.Context, postId uint) (bool, 
 	return s.dao.IsExistsPost(ctx, fmt.Sprint(postId))
 }
 
+func (s *searchRepository) IsExistComment(ctx context.Context, commentId uint) (bool, error) {
+	return s.dao.IsExistsComment(ctx, fmt.Sprint(commentId))
+}
 func (s *searchRepository) IsExistUser(ctx context.Context, userId int64) (bool, error) {
 	return s.dao.IsExistsUser(ctx, fmt.Sprint(userId))
 }
@@ -65,6 +82,17 @@ func (s *searchRepository) BulkInputPosts(ctx context.Context, posts []domain.Po
 	return s.dao.BulkInputPosts(ctx, daoPosts)
 }
 
+<<<<<<< HEAD
+=======
+func (s *searchRepository) BulkInputPosts(ctx context.Context, posts []domain.PostSearch) error {
+	var daoPosts []dao.PostSearch
+	for _, post := range posts {
+		daoPosts = append(daoPosts, s.toDaoPostSearch(post))
+	}
+	return s.dao.BulkInputPosts(ctx, daoPosts)
+}
+
+>>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 func (s *searchRepository) BulkInputUsers(ctx context.Context, users []domain.UserSearch) error {
 	var daoUsers []dao.UserSearch
 	for _, user := range users {
@@ -84,7 +112,9 @@ func (s *searchRepository) DeleteUserIndex(ctx context.Context, userId int64) er
 func (s *searchRepository) DeletePostIndex(ctx context.Context, postId uint) error {
 	return s.dao.DeletePostIndex(ctx, postId)
 }
-
+func (s *searchRepository) DeleteCommentIndex(ctx context.Context, commentId uint) error {
+	return s.dao.DeleteCommentIndex(ctx, commentId)
+}
 func (s *searchRepository) toDaoPostSearch(domainPosts domain.PostSearch) dao.PostSearch {
 	return dao.PostSearch{
 		Content: domainPosts.Content,
@@ -95,6 +125,14 @@ func (s *searchRepository) toDaoPostSearch(domainPosts domain.PostSearch) dao.Po
 	}
 }
 
+func (s *searchRepository) toDaoCommentSearch(domainComments domain.CommentSearch) dao.CommentSearch {
+	return dao.CommentSearch{
+		Content:  domainComments.Content,
+		Id:       int64(domainComments.Id),
+		Status:   domainComments.Status,
+		AuthorId: domainComments.AuthorId,
+	}
+}
 func (s *searchRepository) toDaoUserSearch(domainUsers domain.UserSearch) dao.UserSearch {
 	return dao.UserSearch{
 		Id:       domainUsers.Id,
@@ -146,4 +184,16 @@ func (s *searchRepository) toDomainUserSearch(daoUsers []dao.UserSearch) []domai
 		}
 	}
 	return domainUsers
+}
+func (s *searchRepository) toDomainCommentSearch(daoComments []dao.CommentSearch) []domain.CommentSearch {
+	domainComments := make([]domain.CommentSearch, len(daoComments))
+	for i, daoComment := range daoComments {
+		domainComments[i] = domain.CommentSearch{
+			Content:  daoComment.Content,
+			Id:       uint(daoComment.Id),
+			Status:   daoComment.Status,
+			AuthorId: daoComment.AuthorId,
+		}
+	}
+	return domainComments
 }

@@ -18,4 +18,14 @@ type UserSearch struct {
 	Email    string
 	Phone    string
 	About    string
+<<<<<<< HEAD
+=======
+}
+
+type CommentSearch struct {
+	Id       uint   // 评论ID
+	AuthorId int64  // 评论者ID
+	Status   uint8  // 评论状态
+	Content  string // 评论内容
+>>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 }
