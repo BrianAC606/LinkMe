@@ -8,22 +8,12 @@ import (
 	"time"
 
 	"github.com/elastic/go-elasticsearch/v8/typedapi/core/bulk"
-<<<<<<< HEAD
-	"sync"
-	"time"
-=======
 	"strconv"
 	"strings"
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 
 	"github.com/elastic/go-elasticsearch/v8/typedapi/indices/create"
 	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 	"go.uber.org/zap"
-<<<<<<< HEAD
-	"strconv"
-	"strings"
-=======
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
@@ -50,10 +40,7 @@ type SearchDAO interface {
 	IsExistsComment(ctx context.Context, commentid string) (bool, error)
 	InputUser(ctx context.Context, user UserSearch) error
 	InputPost(ctx context.Context, post PostSearch) error
-<<<<<<< HEAD
-=======
 	InputComment(ctx context.Context, comment CommentSearch) error
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 	BulkInputPosts(ctx context.Context, posts []PostSearch) error
 	BulkInputUsers(ctx context.Context, users []UserSearch) error
 	BulkInputLogs(ctx context.Context, event []ReadEvent) error
@@ -85,15 +72,12 @@ type UserSearch struct {
 	Email    string    `json:"email"`
 	Phone    string    `json:"phone"`
 	About    string    `json:"about"`
-<<<<<<< HEAD
-=======
 }
 type CommentSearch struct {
 	Id       int64  `json:"id"`
 	AuthorId int64  `json:"author_id"`
 	Content  string `json:"content"`
 	Status   uint8  `json:"status"`
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 }
 
 type ReadEvent struct {
@@ -222,8 +206,6 @@ func (s *searchDAO) CreateLogsIndex(ctx context.Context) error {
 		"message":   types.NewTextProperty(),
 	}
 	return s.createIndex(ctx, LogsIndex, prop)
-<<<<<<< HEAD
-=======
 }
 
 // SearchComment 根据关键词搜索评论，返回匹配的结果
@@ -266,7 +248,6 @@ func (s *searchDAO) SearchComments(ctx context.Context, keywords []string) ([]Co
 	}
 	s.l.Info("Successfully completed SearchComments", zap.Int("resultCount", len(comments)))
 	return comments, nil
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 }
 
 // SearchPosts 根据关键词搜索帖子，返回匹配的结果
@@ -425,8 +406,6 @@ func (s *searchDAO) InputPost(ctx context.Context, post PostSearch) error {
 	return nil
 }
 
-<<<<<<< HEAD
-=======
 // InputComment 添加评论到搜索索引
 func (s *searchDAO) InputComment(ctx context.Context, comment CommentSearch) error {
 	_, err := s.client.Index(CommentIndex).
@@ -459,7 +438,6 @@ func (s *searchDAO) BulkInputUsers(ctx context.Context, users []UserSearch) erro
 	return nil
 }
 
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 // BulkInputPosts 批量向es插入post，主要用于同步全量快照的数据
 func (s *searchDAO) BulkInputPosts(ctx context.Context, posts []PostSearch) error {
 	var req bulk.Request

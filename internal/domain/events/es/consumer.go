@@ -5,14 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-<<<<<<< HEAD
-	"github.com/GoSimplicity/LinkMe/internal/domain"
-	"time"
-
-=======
 	"time"
 	"github.com/GoSimplicity/LinkMe/internal/domain"
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 	"github.com/GoSimplicity/LinkMe/internal/repository"
 	"github.com/IBM/sarama"
 	"go.uber.org/zap"
@@ -64,8 +58,6 @@ type Post struct {
 	CommentCount int64        `mapstructure:"comment_count"`
 	uid          int64        `mapstructure:"uid"`
 	IsSubmit     int8         `mapstructure:"is_submit"`
-<<<<<<< HEAD
-=======
 }
 
 // Comment 结构体表示评论的数据结构
@@ -81,7 +73,6 @@ type Comment struct {
 	CreatedAt int64  `mapstructure:"created_at"`
 	UpdatedAt int64  `mapstructure:"updated_at"`
 	Status    uint8  `mapstructure:"status"`
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 }
 
 // User 结构体表示用户的数据结构
@@ -231,7 +222,6 @@ func (r *EsConsumer) Consume(sess sarama.ConsumerGroupSession, msg *sarama.Consu
 			r.l.Error("处理ES失败", zap.Int64("id", user.Id), zap.Error(err))
 			return
 		}
-
 	}
 
 	sess.MarkMessage(msg, "")
@@ -287,21 +277,13 @@ func (r *EsConsumer) pushOrUpdatePostIndex(ctx context.Context, post Post) error
 	return nil
 }
 
-<<<<<<< HEAD
-// pushOrUpdateUserIndex 创建或更新用户索引
-func (r *EsConsumer) pushOrUpdateUserIndex(ctx context.Context, user User) error {
-	exists, err := r.isUserExists(ctx, user.Id)
-=======
 // pushOrUpdateCommentIndex 创建或更新评论索引
 func (r *EsConsumer) pushOrUpdateCommentIndex(ctx context.Context, comment Comment) error {
 	exists, err := r.isCommentIndexExists(ctx, comment.ID)
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 	if err != nil {
 		return err
 	}
 	if exists {
-<<<<<<< HEAD
-=======
 		r.l.Debug("Comment 已存在，跳过处理", zap.Int64("id", comment.ID))
 		return nil
 	}
@@ -358,7 +340,6 @@ func (r *EsConsumer) pushOrUpdateUserIndex(ctx context.Context, user User) error
 		return err
 	}
 	if exists {
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 		r.l.Debug("User 已存在，执行更新操作", zap.Int64("id", user.Id))
 		return nil
 	}
@@ -430,10 +411,6 @@ func (r *EsConsumer) deletePostIndex(ctx context.Context, post Post) error {
 	return nil
 }
 
-<<<<<<< HEAD
-// deleteUserIndex 删除索引中的指定用户
-=======
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 func (r *EsConsumer) deleteUserIndex(ctx context.Context, user User) error {
 	exists, err := r.isUserExists(ctx, user.Id)
 	if err != nil {

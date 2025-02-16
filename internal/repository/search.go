@@ -21,10 +21,7 @@ type SearchRepository interface {
 	IsExistUser(ctx context.Context, userId int64) (bool, error)
 	InputUser(ctx context.Context, user domain.UserSearch) error // 处理输入用户
 	InputPost(ctx context.Context, post domain.PostSearch) error
-<<<<<<< HEAD
-=======
 	InputComment(ctx context.Context, comment domain.CommentSearch) error
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 	BulkInputPosts(ctx context.Context, posts []domain.PostSearch) error
 	BulkInputUsers(ctx context.Context, users []domain.UserSearch) error
 	BulkInputLogs(ctx context.Context, event []domain.ReadEvent) error // 处理输入文章
@@ -82,8 +79,6 @@ func (s *searchRepository) BulkInputPosts(ctx context.Context, posts []domain.Po
 	return s.dao.BulkInputPosts(ctx, daoPosts)
 }
 
-<<<<<<< HEAD
-=======
 func (s *searchRepository) BulkInputPosts(ctx context.Context, posts []domain.PostSearch) error {
 	var daoPosts []dao.PostSearch
 	for _, post := range posts {
@@ -92,7 +87,6 @@ func (s *searchRepository) BulkInputPosts(ctx context.Context, posts []domain.Po
 	return s.dao.BulkInputPosts(ctx, daoPosts)
 }
 
->>>>>>> f48fc76e85a27ad36918104c4c0d1380a64bc6b6
 func (s *searchRepository) BulkInputUsers(ctx context.Context, users []domain.UserSearch) error {
 	var daoUsers []dao.UserSearch
 	for _, user := range users {
